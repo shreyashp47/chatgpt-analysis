@@ -51,7 +51,7 @@ export function MessageBubble({ message, isStreaming, isLast, onRegenerate }: Me
           <Bot className="w-4 h-4 text-white" />
         </div>
       )}
-      <div className="flex flex-col items-end">
+      <div className={cn('flex flex-col', message.role === 'user' ? 'items-end' : 'items-start')}>
         <div
           className={cn(
             'max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap',
