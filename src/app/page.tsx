@@ -12,6 +12,7 @@ type Message = {
 const PROVIDERS = [
   { value: 'ollama', label: 'Ollama (Local)' },
   { value: 'groq', label: 'Groq (Free)' },
+  { value: 'gemini', label: 'Gemini (Free)' },
   { value: 'openai', label: 'OpenAI' },
 ]
 
