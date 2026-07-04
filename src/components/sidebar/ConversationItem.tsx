@@ -16,9 +16,9 @@ export function ConversationItem({ conversation, isActive, onSelect, onDelete }:
     <button
       onClick={() => onSelect(conversation.id)}
       className={cn(
-        'flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm text-left transition-colors group',
+        'flex items-center gap-2 w-full rounded-xl px-3 py-2 text-sm text-left transition-colors group',
         isActive
-          ? 'bg-[var(--message-user)] text-[var(--foreground)]'
+          ? 'bg-[var(--message-user)] text-[var(--foreground)] font-medium'
           : 'text-[var(--foreground)]/70 hover:bg-[var(--message-user)] hover:text-[var(--foreground)]'
       )}
     >

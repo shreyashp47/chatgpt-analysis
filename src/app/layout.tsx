@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "ChatGPT Clone",
-  description: "A ChatGPT clone built with Next.js",
+  title: "ChatGPT Clone — Multi-Provider AI Chat",
+  description: "A ChatGPT clone with support for Ollama, Groq, Gemini, and OpenAI",
 }
 
 export default function RootLayout({

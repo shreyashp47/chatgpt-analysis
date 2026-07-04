@@ -1,8 +1,7 @@
 'use client'
 
 import { useRef, useEffect, useState, useCallback } from 'react'
-import { Bot, ChevronDown } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { ChevronDown } from 'lucide-react'
 import { MessageBubble } from './MessageBubble'
 import type { Conversation } from '@/types/conversation'
 
@@ -44,16 +43,20 @@ export function ChatWindow({ conversation, streaming, onRegenerate }: ChatWindow
       onScroll={checkScroll}
       className="flex-1 overflow-y-auto px-4 py-6 relative"
     >
-      <div className="max-w-3xl mx-auto space-y-4">
+      <div className="max-w-4xl mx-auto space-y-4 w-full">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-center">
-            <Bot className="w-12 h-12 text-[var(--accent)] mb-4" />
-            <h2 className="text-xl font-medium text-[var(--foreground)] mb-2">
-              Start a conversation
+            <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-2">
+              What do you want to know?
             </h2>
-            <p className="text-sm text-[var(--foreground)] opacity-60 max-w-md">
-              Choose a provider above and start chatting.
-            </p>
+            <a
+              href="https://github.com/shreyashp47/shreyashp47.github.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-[var(--foreground)]/30 hover:text-[var(--accent)] transition-colors mt-6"
+            >
+              Built by shreyashp47
+            </a>
           </div>
         )}
 
