@@ -7,7 +7,8 @@ function generateId() {
 
 export function useStreamResponse() {
   const addMessage = useChatStore((s) => s.addMessage)
-  const updateLastMessage = useChatStore((s) => s.updateLastMessage)
+  const updateMessage = useChatStore((s) => s.updateMessage)
+  const popLastAssistantMessage = useChatStore((s) => s.popLastAssistantMessage)
   const setStreaming = useChatStore((s) => s.setStreaming)
 
   async function sendMessage(conversationId: string, content: string, provider: string) {
@@ -27,6 +28,24 @@ export function useStreamResponse() {
     }
     addMessage(conversationId, assistantMsg)
 
+    await streamResponse(conversationId, assistantMsg.id, provider)
+  }
+
+  async function regenerate(conversationId: string, provider: string) {
+    popLastAssistantMessage(conversationId)
+
+    const assistantMsg: Message = {
+      id: generateId(),
+      role: 'assistant',
+      content: '',
+      createdAt: Date.now(),
+    }
+    addMessage(conversationId, assistantMsg)
+
+    await streamResponse(conversationId, assistantMsg.id, provider)
+  }
+
+  async function streamResponse(conversationId: string, assistantId: string, provider: string) {
     setStreaming(true)
 
     try {
@@ -58,15 +77,15 @@ export function useStreamResponse() {
         if (done) break
         const text = decoder.decode(value, { stream: true })
         fullContent += text
-        updateLastMessage(conversationId, fullContent)
+        updateMessage(conversationId, assistantId, fullContent)
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Something went wrong'
-      updateLastMessage(conversationId, `Error: ${message}`)
+      updateMessage(conversationId, assistantId, `Error: ${message}`)
     } finally {
       setStreaming(false)
     }
   }
 
-  return { sendMessage }
+  return { sendMessage, regenerate }
 }

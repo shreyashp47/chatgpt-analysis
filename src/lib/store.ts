@@ -16,6 +16,8 @@ interface ChatState {
   setActive: (id: string | null) => void
   addMessage: (conversationId: string, message: Message) => void
   updateLastMessage: (conversationId: string, content: string) => void
+  updateMessage: (conversationId: string, messageId: string, content: string) => void
+  popLastAssistantMessage: (conversationId: string) => void
   setStreaming: (streaming: boolean) => void
   getActiveConversation: () => Conversation | undefined
 }
@@ -83,6 +85,38 @@ export const useChatStore = create<ChatState>()(
                   ...c,
                   messages: c.messages.map((m, i) =>
                     i === c.messages.length - 1 ? { ...m, content } : m
+                  ),
+                  updatedAt: Date.now(),
+                }
+          ),
+        }))
+      },
+
+      updateMessage: (conversationId, messageId, content) => {
+        set((state) => ({
+          conversations: state.conversations.map((c) =>
+            c.id !== conversationId
+              ? c
+              : {
+                  ...c,
+                  messages: c.messages.map((m) =>
+                    m.id !== messageId ? m : { ...m, content }
+                  ),
+                  updatedAt: Date.now(),
+                }
+          ),
+        }))
+      },
+
+      popLastAssistantMessage: (conversationId) => {
+        set((state) => ({
+          conversations: state.conversations.map((c) =>
+            c.id !== conversationId
+              ? c
+              : {
+                  ...c,
+                  messages: c.messages.filter(
+                    (_, i) => !(i === c.messages.length - 1 && c.messages[i].role === 'assistant')
                   ),
                   updatedAt: Date.now(),
                 }
