@@ -58,13 +58,14 @@ export function ChatWindow({ conversation, streaming, onRegenerate }: ChatWindow
         )}
 
         {messages.map((msg, i) => (
-          <MessageBubble
-            key={msg.id}
-            message={msg}
-            isStreaming={streaming}
-            isLast={i === messages.length - 1}
-            onRegenerate={onRegenerate}
-          />
+          <div key={msg.id} className="message-enter">
+            <MessageBubble
+              message={msg}
+              isStreaming={streaming}
+              isLast={i === messages.length - 1}
+              onRegenerate={onRegenerate}
+            />
+          </div>
         ))}
 
         <div ref={bottomRef} />

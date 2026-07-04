@@ -8,6 +8,8 @@ import { ChatInput } from '@/components/chat/ChatInput'
 import { ChatWindow } from '@/components/chat/ChatWindow'
 import { Sidebar } from '@/components/sidebar/Sidebar'
 import { SidebarToggle } from '@/components/sidebar/SidebarToggle'
+import { ThemeToggle } from '@/components/theme/ThemeToggle'
+import { Toast } from '@/components/ui/Toast'
 
 const PROVIDERS = [
   { value: 'ollama', label: 'Ollama (Local)' },
@@ -21,6 +23,7 @@ export default function Home() {
   const [provider, setProvider] = useState('ollama')
   const [error, setError] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   const conversations = useChatStore((s) => s.conversations)
   const activeId = useChatStore((s) => s.activeId)
@@ -33,17 +36,25 @@ export default function Home() {
   const activeConv = conversations.find((c) => c.id === activeId)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
     if (!activeId && conversations.length === 0) {
       createConversation()
     }
   }, [])
 
-  useEffect(() => {
-    if (error) {
-      const t = setTimeout(() => setError(''), 5000)
-      return () => clearTimeout(t)
-    }
-  }, [error])
+  if (!mounted) {
+    return (
+      <div className="flex h-dvh bg-[var(--background)] items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-[var(--accent)] border-t-transparent animate-spin" />
+          <p className="text-sm text-[var(--foreground)]/50">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   function handleSubmit() {
     if (!input.trim() || streaming) return
@@ -98,15 +109,18 @@ export default function Home() {
             <Sparkles className="w-5 h-5 text-[var(--accent)]" />
             <h1 className="font-semibold text-[var(--foreground)]">Chat</h1>
           </div>
-          <select
-            value={provider}
-            onChange={e => setProvider(e.target.value)}
-            className="text-sm bg-[var(--chat-input)] border border-[var(--chat-input-border)] rounded-lg px-3 py-1.5 text-[var(--foreground)] outline-none focus:border-[var(--accent)]"
-          >
-            {PROVIDERS.map(p => (
-              <option key={p.value} value={p.value}>{p.label}</option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <select
+              value={provider}
+              onChange={e => setProvider(e.target.value)}
+              className="text-sm bg-[var(--chat-input)] border border-[var(--chat-input-border)] rounded-lg px-3 py-1.5 text-[var(--foreground)] outline-none focus:border-[var(--accent)]"
+            >
+              {PROVIDERS.map(p => (
+                <option key={p.value} value={p.value}>{p.label}</option>
+              ))}
+            </select>
+          </div>
         </header>
 
         <ChatWindow
@@ -114,14 +128,6 @@ export default function Home() {
           streaming={streaming}
           onRegenerate={handleRegenerate}
         />
-
-        {error && (
-          <div className="px-4 pb-2">
-            <div className="max-w-3xl mx-auto text-sm text-red-500 bg-red-500/10 rounded-lg px-4 py-2 text-center">
-              {error}
-            </div>
-          </div>
-        )}
 
         <form
           onSubmit={(e) => { e.preventDefault(); handleSubmit() }}
@@ -137,6 +143,10 @@ export default function Home() {
           </div>
         </form>
       </div>
+
+      {error && (
+        <Toast message={error} onClose={() => setError('')} />
+      )}
     </div>
   )
 }
