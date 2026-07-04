@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Key, Settings, History } from 'lucide-react'
+import { Key, Settings } from 'lucide-react'
 import { useChatStore } from '@/lib/store'
 import { useStreamResponse } from '@/hooks/useStreamResponse'
 import { ChatInput } from '@/components/chat/ChatInput'
@@ -46,6 +45,7 @@ export default function Home() {
   const streaming = useChatStore((s) => s.streaming)
   const createConversation = useChatStore((s) => s.createConversation)
   const deleteConversation = useChatStore((s) => s.deleteConversation)
+  const clearAllConversations = useChatStore((s) => s.clearAllConversations)
   const setActive = useChatStore((s) => s.setActive)
 
   const { sendMessage, regenerate } = useStreamResponse()
@@ -99,6 +99,12 @@ export default function Home() {
     regenerate(activeId, provider)
   }
 
+  function handleClearAll() {
+    if (window.confirm('Delete all conversations? This cannot be undone.')) {
+      clearAllConversations()
+    }
+  }
+
   function handleSelectConversation(id: string) {
     setActive(id)
     setSidebarOpen(false)
@@ -121,16 +127,9 @@ export default function Home() {
         onNewChat={handleNewChat}
         onSelect={handleSelectConversation}
         onDelete={deleteConversation}
+        onClearAll={handleClearAll}
       >
-        <div className="border-t border-[var(--sidebar-border)] p-2 space-y-0.5">
-          <Link
-            href="/history"
-            onClick={() => setSidebarOpen(false)}
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-[var(--foreground)]/60 hover:bg-[var(--message-user)] hover:text-[var(--foreground)] transition-colors"
-          >
-            <History className="w-4 h-4" />
-            History
-          </Link>
+        <div className="border-t border-[var(--sidebar-border)] p-2">
           <a
             href="https://github.com/shreyashp47/shreyashp47.github.io"
             target="_blank"

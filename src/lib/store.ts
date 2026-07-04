@@ -13,6 +13,7 @@ interface ChatState {
 
   createConversation: () => string
   deleteConversation: (id: string) => void
+  clearAllConversations: () => void
   setActive: (id: string | null) => void
   addMessage: (conversationId: string, message: Message) => void
   updateLastMessage: (conversationId: string, content: string) => void
@@ -54,6 +55,10 @@ export const useChatStore = create<ChatState>()(
               ? state.conversations.find((c) => c.id !== id)?.id ?? null
               : state.activeId,
         }))
+      },
+
+      clearAllConversations: () => {
+        set({ conversations: [], activeId: null })
       },
 
       setActive: (id) => set({ activeId: id }),
