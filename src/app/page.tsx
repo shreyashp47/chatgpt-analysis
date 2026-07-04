@@ -34,7 +34,7 @@ function hasApiKey(provider: string): boolean {
 
 export default function Home() {
   const [input, setInput] = useState('')
-  const [provider, setProvider] = useState('ollama')
+  const [provider, setProvider] = useState('groq')
   const [error, setError] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
