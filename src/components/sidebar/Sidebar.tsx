@@ -14,9 +14,10 @@ interface SidebarProps {
   onNewChat: () => void
   onSelect: (id: string) => void
   onDelete: (id: string) => void
+  children?: React.ReactNode
 }
 
-export function Sidebar({ conversations, activeId, isOpen, onClose, onNewChat, onSelect, onDelete }: SidebarProps) {
+export function Sidebar({ conversations, activeId, isOpen, onClose, onNewChat, onSelect, onDelete, children }: SidebarProps) {
   useEffect(() => {
     function handleEscape(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
@@ -63,6 +64,7 @@ export function Sidebar({ conversations, activeId, isOpen, onClose, onNewChat, o
             />
           ))}
         </div>
+        {children}
       </aside>
     </>
   )
