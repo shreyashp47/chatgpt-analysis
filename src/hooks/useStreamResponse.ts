@@ -5,6 +5,18 @@ function generateId() {
   return crypto.randomUUID()
 }
 
+function getApiKey(provider: string): string | undefined {
+  if (typeof window === 'undefined') return undefined
+  try {
+    const stored = localStorage.getItem('chat-api-keys')
+    if (!stored) return undefined
+    const keys = JSON.parse(stored)
+    return keys[provider]
+  } catch {
+    return undefined
+  }
+}
+
 export function useStreamResponse() {
   const addMessage = useChatStore((s) => s.addMessage)
   const updateMessage = useChatStore((s) => s.updateMessage)
@@ -55,10 +67,12 @@ export function useStreamResponse() {
         content: m.content,
       }))
 
+      const apiKey = getApiKey(provider)
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages, provider }),
+        body: JSON.stringify({ messages: apiMessages, provider, apiKey }),
       })
 
       if (!res.ok) {

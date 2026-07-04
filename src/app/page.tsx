@@ -9,6 +9,7 @@ import { ChatWindow } from '@/components/chat/ChatWindow'
 import { Sidebar } from '@/components/sidebar/Sidebar'
 import { SidebarToggle } from '@/components/sidebar/SidebarToggle'
 import { ThemeToggle } from '@/components/theme/ThemeToggle'
+import { SettingsButton } from '@/components/ui/SettingsModal'
 import { Toast } from '@/components/ui/Toast'
 
 const PROVIDERS = [
@@ -109,7 +110,8 @@ export default function Home() {
             <Sparkles className="w-5 h-5 text-[var(--accent)]" />
             <h1 className="font-semibold text-[var(--foreground)]">Chat</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <SettingsButton />
             <ThemeToggle />
             <select
               value={provider}

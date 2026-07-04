@@ -3,9 +3,10 @@ import type { ChatMessage } from '@/lib/ai/types'
 
 export async function POST(req: Request) {
   try {
-    const { messages, provider: providerName } = await req.json() as {
+    const { messages, provider: providerName, apiKey } = await req.json() as {
       messages: ChatMessage[]
       provider?: string
+      apiKey?: string
     }
 
     if (!messages || !Array.isArray(messages)) {
@@ -13,11 +14,11 @@ export async function POST(req: Request) {
     }
 
     const provider = getProvider(providerName)
-    const config = getProviderConfig(providerName)
+    const config = getProviderConfig(providerName, apiKey)
 
     if (!config.apiKey && provider.name !== 'ollama') {
       return new Response(
-        `API key not configured for provider "${provider.name}". Set ${provider.name.toUpperCase()}_API_KEY in .env.local`,
+        `API key required for "${provider.name}". Add it in settings.`,
         { status: 400 }
       )
     }
