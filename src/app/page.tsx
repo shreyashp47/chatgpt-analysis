@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { Sparkles, MessageSquare, Trash2, Plus } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useState, useEffect } from 'react'
+import { Sparkles } from 'lucide-react'
 import { useChatStore } from '@/lib/store'
 import { useStreamResponse } from '@/hooks/useStreamResponse'
 import { ChatInput } from '@/components/chat/ChatInput'
 import { ChatWindow } from '@/components/chat/ChatWindow'
+import { Sidebar } from '@/components/sidebar/Sidebar'
+import { SidebarToggle } from '@/components/sidebar/SidebarToggle'
 
 const PROVIDERS = [
   { value: 'ollama', label: 'Ollama (Local)' },
@@ -19,7 +20,7 @@ export default function Home() {
   const [input, setInput] = useState('')
   const [provider, setProvider] = useState('ollama')
   const [error, setError] = useState('')
-  const inputRef = useRef<HTMLTextAreaElement>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const conversations = useChatStore((s) => s.conversations)
   const activeId = useChatStore((s) => s.activeId)
@@ -62,6 +63,7 @@ export default function Home() {
     createConversation()
     setInput('')
     setError('')
+    setSidebarOpen(false)
   }
 
   function handleRegenerate() {
@@ -69,46 +71,30 @@ export default function Home() {
     regenerate(activeId, provider)
   }
 
+  function handleSelectConversation(id: string) {
+    setActive(id)
+    setSidebarOpen(false)
+  }
+
   return (
     <div className="flex h-dvh bg-[var(--background)]">
-      <aside className="hidden md:flex flex-col w-64 bg-[var(--sidebar)] border-r border-[var(--sidebar-border)]">
-        <div className="p-3">
-          <button
-            onClick={handleNewChat}
-            className="flex items-center gap-2 w-full rounded-lg border border-[var(--chat-input-border)] px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--message-user)] transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            New chat
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-0.5">
-          {conversations.map((conv) => (
-            <button
-              key={conv.id}
-              onClick={() => setActive(conv.id)}
-              className={cn(
-                'flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm text-left transition-colors group',
-                conv.id === activeId
-                  ? 'bg-[var(--message-user)] text-[var(--foreground)]'
-                  : 'text-[var(--foreground)]/70 hover:bg-[var(--message-user)] hover:text-[var(--foreground)]'
-              )}
-            >
-              <MessageSquare className="w-4 h-4 shrink-0" />
-              <span className="truncate flex-1">{conv.title}</span>
-              <button
-                onClick={(e) => { e.stopPropagation(); deleteConversation(conv.id) }}
-                className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-opacity"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </button>
-          ))}
-        </div>
-      </aside>
+      <Sidebar
+        conversations={conversations}
+        activeId={activeId}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onNewChat={handleNewChat}
+        onSelect={handleSelectConversation}
+        onDelete={deleteConversation}
+      />
 
       <div className="flex flex-col flex-1 min-w-0">
         <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--sidebar-border)] shrink-0">
           <div className="flex items-center gap-2">
+            <SidebarToggle
+              isOpen={sidebarOpen}
+              onToggle={() => setSidebarOpen((v) => !v)}
+            />
             <Sparkles className="w-5 h-5 text-[var(--accent)]" />
             <h1 className="font-semibold text-[var(--foreground)]">Chat</h1>
           </div>

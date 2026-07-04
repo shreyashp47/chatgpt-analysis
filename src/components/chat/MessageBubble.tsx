@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils'
 import { Bot, User, RefreshCw } from 'lucide-react'
 import { MessageActions } from './MessageActions'
+import { MarkdownRenderer } from './MarkdownRenderer'
 import type { Message } from '@/types/conversation'
 
 interface MessageBubbleProps {
@@ -62,7 +63,11 @@ export function MessageBubble({ message, isStreaming, isLast, onRegenerate }: Me
           )}
           title={formatDate(message.createdAt)}
         >
-          {displayContent}
+          {message.role === 'assistant' && !error ? (
+            <MarkdownRenderer content={displayContent} />
+          ) : (
+            <p className="whitespace-pre-wrap">{displayContent}</p>
+          )}
           {isStreaming && isLast && (
             <span className="inline-block w-2 h-4 bg-[var(--foreground)] ml-0.5 animate-pulse" />
           )}
