@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, Key, Settings } from 'lucide-react'
 import { useChatStore } from '@/lib/store'
 import { useStreamResponse } from '@/hooks/useStreamResponse'
 import { ChatInput } from '@/components/chat/ChatInput'
@@ -9,7 +9,7 @@ import { ChatWindow } from '@/components/chat/ChatWindow'
 import { Sidebar } from '@/components/sidebar/Sidebar'
 import { SidebarToggle } from '@/components/sidebar/SidebarToggle'
 import { ThemeToggle } from '@/components/theme/ThemeToggle'
-import { SettingsButton } from '@/components/ui/SettingsModal'
+import { SettingsButton, SettingsModal } from '@/components/ui/SettingsModal'
 import { Toast } from '@/components/ui/Toast'
 
 const PROVIDERS = [
@@ -19,11 +19,25 @@ const PROVIDERS = [
   { value: 'openai', label: 'OpenAI' },
 ]
 
+function hasApiKey(provider: string): boolean {
+  if (provider === 'ollama') return true
+  if (typeof window === 'undefined') return false
+  try {
+    const stored = localStorage.getItem('chat-api-keys')
+    if (!stored) return false
+    const keys = JSON.parse(stored)
+    return !!keys[provider]
+  } catch {
+    return false
+  }
+}
+
 export default function Home() {
   const [input, setInput] = useState('')
   const [provider, setProvider] = useState('ollama')
   const [error, setError] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   const conversations = useChatStore((s) => s.conversations)
@@ -35,6 +49,7 @@ export default function Home() {
 
   const { sendMessage, regenerate } = useStreamResponse()
   const activeConv = conversations.find((c) => c.id === activeId)
+  const missingKey = mounted && !hasApiKey(provider) && provider !== 'ollama'
 
   useEffect(() => {
     setMounted(true)
@@ -88,6 +103,13 @@ export default function Home() {
     setSidebarOpen(false)
   }
 
+  function handleProviderChange(value: string) {
+    setProvider(value)
+    if (!hasApiKey(value) && value !== 'ollama') {
+      setSettingsOpen(true)
+    }
+  }
+
   return (
     <div className="flex h-dvh bg-[var(--background)]">
       <Sidebar
@@ -111,11 +133,11 @@ export default function Home() {
             <h1 className="font-semibold text-[var(--foreground)]">Chat</h1>
           </div>
           <div className="flex items-center gap-1">
-            <SettingsButton />
+            <SettingsButton onClick={() => setSettingsOpen(true)} />
             <ThemeToggle />
             <select
               value={provider}
-              onChange={e => setProvider(e.target.value)}
+              onChange={e => handleProviderChange(e.target.value)}
               className="text-sm bg-[var(--chat-input)] border border-[var(--chat-input-border)] rounded-lg px-3 py-1.5 text-[var(--foreground)] outline-none focus:border-[var(--accent)]"
             >
               {PROVIDERS.map(p => (
@@ -124,6 +146,19 @@ export default function Home() {
             </select>
           </div>
         </header>
+
+        {missingKey && (
+          <div className="px-4 pt-3">
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="w-full flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3 text-sm text-amber-700 dark:text-amber-400 hover:bg-amber-500/20 transition-colors text-left"
+            >
+              <Key className="w-4 h-4 shrink-0" />
+              <span>Add your <strong>{PROVIDERS.find(p => p.value === provider)?.label}</strong> API key in settings to start chatting</span>
+              <Settings className="w-4 h-4 ml-auto shrink-0" />
+            </button>
+          </div>
+        )}
 
         <ChatWindow
           conversation={activeConv}
@@ -140,11 +175,13 @@ export default function Home() {
               input={input}
               onChange={setInput}
               onSubmit={handleSubmit}
-              disabled={streaming}
+              disabled={streaming || missingKey}
             />
           </div>
         </form>
       </div>
+
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
 
       {error && (
         <Toast message={error} onClose={() => setError('')} />
