@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --sidebar: #f9f9f9;
+  --sidebar-border: #e5e5e5;
+  --chat-input: #ffffff;
+  --chat-input-border: #d9d9d9;
+  --message-user: #f4f4f4;
+  --message-assistant: #ffffff;
+  --accent: #10a37f;
+  --accent-hover: #0e8c6c;
+}
+
+.dark {
+  --background: #212121;
+  --foreground: #ececec;
+  --sidebar: #171717;
+  --sidebar-border: #2f2f2f;
+  --chat-input: #2f2f2f;
+  --chat-input-border: #424242;
+  --message-user: #2f2f2f;
+  --message-assistant: #212121;
+  --accent: #10a37f;
+  --accent-hover: #0e8c6c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-chat-input: var(--chat-input);
+  --color-chat-input-border: var(--chat-input-border);
+  --color-message-user: var(--message-user);
+  --color-message-assistant: var(--message-assistant);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+}
