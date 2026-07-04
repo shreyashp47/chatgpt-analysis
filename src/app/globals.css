@@ -4,33 +4,36 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0d0d0d;
+  --secondary: #5d5d5d;
   --sidebar: #f9f9f9;
-  --sidebar-border: #e5e5e5;
+  --sidebar-border: #ececec;
   --chat-input: #ffffff;
   --chat-input-border: #d9d9d9;
   --message-user: #f4f4f4;
   --message-assistant: #ffffff;
-  --accent: #10a37f;
-  --accent-hover: #0e8c6c;
+  --accent: #007aff;
+  --accent-hover: #0062cc;
 }
 
 .dark {
   --background: #212121;
   --foreground: #ececec;
+  --secondary: #8f8f8f;
   --sidebar: #171717;
   --sidebar-border: #2f2f2f;
   --chat-input: #2f2f2f;
   --chat-input-border: #424242;
   --message-user: #2f2f2f;
   --message-assistant: #212121;
-  --accent: #10a37f;
-  --accent-hover: #0e8c6c;
+  --accent: #007aff;
+  --accent-hover: #3395ff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-secondary: var(--secondary);
   --color-sidebar: var(--sidebar);
   --color-sidebar-border: var(--sidebar-border);
   --color-chat-input: var(--chat-input);

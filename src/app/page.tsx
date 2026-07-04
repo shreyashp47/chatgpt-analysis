@@ -135,14 +135,12 @@ export default function Home() {
       </Sidebar>
 
       <div className="flex flex-col flex-1 min-w-0">
-        <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--sidebar-border)] shrink-0">
+        <header className="flex items-center justify-between px-4 py-2 border-b border-[var(--sidebar-border)] shrink-0">
           <div className="flex items-center gap-2">
             <SidebarToggle
               isOpen={sidebarOpen}
               onToggle={() => setSidebarOpen((v) => !v)}
             />
-            <Sparkles className="w-5 h-5 text-[var(--accent)]" />
-            <h1 className="font-semibold text-[var(--foreground)]">Chat</h1>
           </div>
           <div className="flex items-center gap-1">
             <SettingsButton onClick={() => setSettingsOpen(true)} />
@@ -150,7 +148,7 @@ export default function Home() {
             <select
               value={provider}
               onChange={e => handleProviderChange(e.target.value)}
-              className="text-sm bg-[var(--chat-input)] border border-[var(--chat-input-border)] rounded-lg px-3 py-1.5 text-[var(--foreground)] outline-none focus:border-[var(--accent)]"
+              className="text-sm bg-transparent border border-[var(--chat-input-border)] rounded-lg px-3 py-1.5 text-[var(--foreground)] outline-none hover:bg-[var(--message-user)] transition-colors cursor-pointer"
             >
               {PROVIDERS.map(p => (
                 <option key={p.value} value={p.value}>{p.label}</option>
@@ -180,15 +178,26 @@ export default function Home() {
 
         <form
           onSubmit={(e) => { e.preventDefault(); handleSubmit() }}
-          className="border-t border-[var(--sidebar-border)] p-4 shrink-0"
+          className="border-t border-[var(--sidebar-border)] px-4 py-3 shrink-0"
         >
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <ChatInput
               input={input}
               onChange={setInput}
               onSubmit={handleSubmit}
               disabled={streaming || missingKey}
             />
+            <p className="text-xs text-[var(--secondary)]/50 text-center mt-2">
+              ChatGPT can make mistakes. Check important info. Built by{" "}
+              <a
+                href="https://github.com/shreyashp47/shreyashp47.github.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-[var(--accent)]"
+              >
+                shreyashp47
+              </a>
+            </p>
           </div>
         </form>
       </div>

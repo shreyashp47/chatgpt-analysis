@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
-import { Send } from 'lucide-react'
+import { Send, ArrowUp } from 'lucide-react'
 
 interface ChatInputProps {
   input: string
@@ -29,34 +29,32 @@ export function ChatInput({ input, onChange, onSubmit, disabled }: ChatInputProp
     }
   }
 
+  const canSend = input.trim() && !disabled
+
   return (
-    <div className="flex gap-3">
-      <div className="flex-1 relative">
-        <textarea
-          ref={textareaRef}
-          value={input}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Send a message..."
-          rows={1}
-          className="w-full resize-none rounded-xl border border-[var(--chat-input-border)] bg-[var(--chat-input)] px-4 py-3 pr-20 text-sm text-[var(--foreground)] placeholder-[var(--foreground)]/40 outline-none focus:border-[var(--accent)]"
-          disabled={disabled}
-        />
-        <span className="absolute bottom-2 right-3 text-[10px] text-[var(--foreground)]/20 select-none">
-          Shift+Enter for newline
-        </span>
-      </div>
+    <div className="flex items-end gap-2 bg-[var(--chat-input)] border border-[var(--chat-input-border)] rounded-[28px] px-4 py-2 focus-within:border-[var(--accent)] transition-colors shadow-sm">
+      <textarea
+        ref={textareaRef}
+        value={input}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Message ChatGPT"
+        rows={1}
+        className="flex-1 resize-none bg-transparent px-1 py-1.5 text-sm text-[var(--foreground)] placeholder-[var(--secondary)]/50 outline-none max-h-[200px]"
+        disabled={disabled}
+      />
       <button
         type="submit"
-        disabled={!input.trim() || disabled}
+        onClick={onSubmit}
+        disabled={!canSend}
         className={cn(
-          'shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-colors',
-          input.trim() && !disabled
-            ? 'bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]'
-            : 'bg-[var(--chat-input-border)] text-[var(--foreground)]/30 cursor-not-allowed'
+          'shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors',
+          canSend
+            ? 'bg-[var(--foreground)] text-[var(--background)] hover:opacity-80'
+            : 'bg-transparent text-[var(--secondary)]/30 cursor-not-allowed'
         )}
       >
-        <Send className="w-4 h-4" />
+        <ArrowUp className="w-4 h-4" />
       </button>
     </div>
   )

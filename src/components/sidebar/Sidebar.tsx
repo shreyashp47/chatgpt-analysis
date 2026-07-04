@@ -38,7 +38,7 @@ export function Sidebar({ conversations, activeId, isOpen, onClose, onNewChat, o
       <aside
         className={cn(
           'bg-[var(--sidebar)] border-r border-[var(--sidebar-border)] flex flex-col transition-transform duration-200 z-40',
-          'md:relative md:translate-x-0 md:w-64',
+          'md:relative md:translate-x-0 md:w-[260px]',
           isOpen
             ? 'fixed inset-y-0 left-0 w-72 translate-x-0'
             : 'fixed inset-y-0 left-0 w-72 -translate-x-full md:hidden'
