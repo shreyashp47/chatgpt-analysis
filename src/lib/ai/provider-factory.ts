@@ -21,17 +21,17 @@ export function getProvider(name?: string): AIProvider {
   return provider
 }
 
-export function getProviderConfig(providerName?: string): AIProviderConfig {
+export function getProviderConfig(providerName?: string, apiKeyOverride?: string): AIProviderConfig {
   const name = providerName || config.provider
   switch (name) {
     case 'ollama':
       return { baseURL: config.ollama.baseURL, model: config.ollama.model }
     case 'groq':
-      return { apiKey: config.groq.apiKey, model: config.groq.model }
+      return { apiKey: apiKeyOverride || config.groq.apiKey, model: config.groq.model }
     case 'openai':
-      return { apiKey: config.openai.apiKey, model: config.openai.model }
+      return { apiKey: apiKeyOverride || config.openai.apiKey, model: config.openai.model }
     case 'gemini':
-      return { apiKey: config.gemini.apiKey, model: config.gemini.model }
+      return { apiKey: apiKeyOverride || config.gemini.apiKey, model: config.gemini.model }
     default:
       throw new Error(`No config for provider: ${name}`)
   }
