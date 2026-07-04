@@ -149,6 +149,20 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
           ))}
         </div>
 
+        <div className="border-t border-[var(--sidebar-border)] p-4 text-center">
+          <p className="text-xs text-[var(--foreground)]/40">
+            Built by{' '}
+            <a
+              href="https://github.com/shreyashp47"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--accent)] hover:underline"
+            >
+              shreyashp47
+            </a>
+          </p>
+        </div>
+
         <div className="flex items-center justify-end gap-2 p-4 border-t border-[var(--sidebar-border)]">
           <button
             onClick={onClose}
