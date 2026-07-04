@@ -54,6 +54,14 @@ export function ChatWindow({ conversation, streaming, onRegenerate }: ChatWindow
             <p className="text-sm text-[var(--foreground)] opacity-60 max-w-md">
               Choose a provider above and start chatting.
             </p>
+            <a
+              href="https://github.com/shreyashp47/shreyashp47.github.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-[var(--foreground)]/30 hover:text-[var(--accent)] transition-colors mt-6"
+            >
+              Built by shreyashp47
+            </a>
           </div>
         )}
 
